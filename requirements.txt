@@ -1,0 +1,6 @@
+numpy==2.2.1
+opencv_python_headless==4.10.0.84
+pygame==2.6.1
+Requests==2.32.3
+streamlit==1.41.1
+streamlit_drawable_canvas==0.9.3
