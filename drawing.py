@@ -6,6 +6,9 @@ from typing import List, Dict, Optional
 import base64
 from io import BytesIO
 import json
+from pydub import AudioSegment
+import simpleaudio as sa
+import threading
 
 
 @dataclass
@@ -25,15 +28,6 @@ class DrawingChallenge:
 
 class AudioManager:
     def __init__(self):
-        try:
-            pygame.mixer.init()
-            self.audio_initialized = True
-        except pygame.error:
-            self.audio_initialized = False
-            st.sidebar.warning(
-                "Audio features are unavailable on this system. Audio will be disabled."
-            )
-
         self.tracks = {
             "Calm": [
                 AudioTrack("Peaceful Piano", "calm", "audio/peaceful_piano.mp3"),
@@ -50,9 +44,6 @@ class AudioManager:
         }
 
     def render_audio_controls(self):
-        if not self.audio_initialized:
-            return {}
-
         st.sidebar.markdown("### 🎵 Music Player")
         mood = st.sidebar.selectbox(
             "Select Mood", options=list(self.tracks.keys()), key="music_mood"
@@ -66,19 +57,41 @@ class AudioManager:
 
         cols = st.sidebar.columns([1, 1, 1])
         play_btn = cols[0].button("▶️", key="play_music")
-        pause_btn = cols[1].button("⏸️", key="pause_music")
         stop_btn = cols[2].button("⏹️", key="stop_music")
 
         volume = st.sidebar.slider("Volume", 0.0, 1.0, 0.5, key="music_volume")
+
+        if play_btn:
+            track_file = next(t.file_path for t in self.tracks[mood] if t.name == track)
+            threading.Thread(target=self.play_audio, args=(track_file,)).start()
 
         return {
             "mood": mood,
             "track": track,
             "volume": volume,
             "playing": play_btn,
-            "paused": pause_btn,
             "stopped": stop_btn,
         }
+
+    def play_audio(self, file_path):
+        try:
+            audio = AudioSegment.from_mp3(file_path)
+
+            volume_level = st.session_state.get("music_volume", 0.5)
+            audio = audio + (volume_level * 10)
+
+            raw_data = audio.raw_data
+
+            play_obj = sa.play_buffer(
+                raw_data,
+                num_channels=audio.channels,
+                bytes_per_sample=audio.sample_width,
+                sample_rate=audio.frame_rate,
+            )
+
+            play_obj.wait_done()
+        except Exception as e:
+            st.sidebar.error(f"Error playing audio: {e}")
 
 
 class SocialFeatures:
