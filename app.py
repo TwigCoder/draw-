@@ -4,7 +4,6 @@ st.set_page_config(page_title="Draw!", layout="wide")
 
 from streamlit_drawable_canvas import st_canvas
 from datetime import datetime
-import simpleaudio as sa
 import threading
 import time
 import random

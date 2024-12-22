@@ -1,7 +1,5 @@
 numpy==2.2.1
 opencv_python_headless==4.10.0.84
 pydub==0.25.1
-pygame==2.6.1
-simpleaudio==1.0.4
 streamlit==1.41.1
 streamlit_drawable_canvas==0.9.3

@@ -1,5 +1,4 @@
 import streamlit as st
-import pygame
 from dataclasses import dataclass
 import time
 from typing import List, Dict, Optional
@@ -7,7 +6,6 @@ import base64
 from io import BytesIO
 import json
 from pydub import AudioSegment
-import simpleaudio as sa
 import threading
 
 
@@ -82,14 +80,6 @@ class AudioManager:
 
             raw_data = audio.raw_data
 
-            play_obj = sa.play_buffer(
-                raw_data,
-                num_channels=audio.channels,
-                bytes_per_sample=audio.sample_width,
-                sample_rate=audio.frame_rate,
-            )
-
-            play_obj.wait_done()
         except Exception as e:
             st.sidebar.error(f"Error playing audio: {e}")
 
