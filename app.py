@@ -4,15 +4,13 @@ st.set_page_config(page_title="Draw!", layout="wide")
 
 from streamlit_drawable_canvas import st_canvas
 from datetime import datetime
-import pygame
+import simpleaudio as sa
 import threading
 import time
 import random
 import numpy as np
 import sqlite3
 import cv2
-
-pygame.mixer.init()
 
 
 class ColorPalette:
@@ -231,19 +229,7 @@ def setup_styles():
 
 
 def generate_chime(frequency=440, duration=200):
-    sample_rate = 44100
-    bits = 16
-    pygame.mixer.pre_init(sample_rate, -bits, 1)
-    pygame.mixer.init()
-
-    t = np.linspace(0, duration / 1000, int(sample_rate * duration / 1000), False)
-    wave = 0.5 * np.sin(2 * np.pi * frequency * t)
-
-    samples = (wave * 32767).astype(np.int16)
-    stereo_samples = np.column_stack((samples, samples))
-
-    sound = pygame.sndarray.make_sound(stereo_samples)
-    sound.play()
+    pass
 
 
 def initialize_music_controls():
