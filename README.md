@@ -1,4 +1,4 @@
-Welcome to Draw! Check it out [here](WILL ADD LINK ONCE DEPLOYED).
+Welcome to Draw! Check it out [here](https://drawer.streamlit.app).
 
 Literally draw! Choose your tool, the stroke width, any color you desire (daresay one from one of the included palletes)...
 

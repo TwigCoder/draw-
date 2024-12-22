@@ -1,4 +1,5 @@
 import streamlit as st
+import pygame
 from dataclasses import dataclass
 import time
 from typing import List, Dict, Optional
@@ -24,6 +25,15 @@ class DrawingChallenge:
 
 class AudioManager:
     def __init__(self):
+        try:
+            pygame.mixer.init()
+            self.audio_initialized = True
+        except pygame.error:
+            self.audio_initialized = False
+            st.sidebar.warning(
+                "Audio features are unavailable on this system. Audio will be disabled."
+            )
+
         self.tracks = {
             "Calm": [
                 AudioTrack("Peaceful Piano", "calm", "audio/peaceful_piano.mp3"),
@@ -40,6 +50,9 @@ class AudioManager:
         }
 
     def render_audio_controls(self):
+        if not self.audio_initialized:
+            return {}
+
         st.sidebar.markdown("### 🎵 Music Player")
         mood = st.sidebar.selectbox(
             "Select Mood", options=list(self.tracks.keys()), key="music_mood"
